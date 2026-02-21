@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Super Decoder — Support</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #0d140d;
+      --surface:   #161e16;
+      --surface2:  #1c261c;
+      --border:    #2a3d2a;
+      --green:     #33d94b;
+      --green-dim: #1f7a2e;
+      --yellow:    #ffe01a;
+      --white:     #eaeaea;
+      --muted:     #6b7d6b;
+      --red:       #f23333;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grid texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 56px 0 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-super {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 5px;
+      color: var(--green);
+      text-transform: uppercase;
+    }
+
+    .brand-name {
+      font-size: clamp(42px, 8vw, 72px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1;
+      color: var(--white);
+    }
+
+    .brand-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      margin-top: 8px;
+    }
+
+    /* Color dot row */
+    .dots {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
+
+    /* ── Nav pills ── */
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav a {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 7px 16px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: color .2s, border-color .2s, background .2s;
+    }
+    nav a:hover {
+      color: var(--green);
+      border-color: var(--green-dim);
+      background: rgba(51,217,75,0.06);
+    }
+
+    /* ── Sections ── */
+    section {
+      padding: 52px 0 0;
+    }
+
+    .section-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--white);
+      margin-bottom: 24px;
+    }
+
+    p {
+      color: #aabcaa;
+      margin-bottom: 16px;
+      font-size: 15.5px;
+    }
+
+    /* ── How to Play grid ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .step-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .25s, transform .25s;
+      animation: fadeUp .5s ease both;
+    }
+    .step-card:hover {
+      border-color: var(--green-dim);
+      transform: translateY(-3px);
+    }
+    .step-card::before {
+      content: attr(data-n);
+      position: absolute;
+      top: -10px;
+      right: 12px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 64px;
+      color: var(--border);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .step-card h3 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 8px;
+    }
+    .step-card p {
+      font-size: 14px;
+      margin: 0;
+      color: #8fa48f;
+    }
+
+    /* ── Feedback legend ── */
+    .legend {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+
+    .legend-bar {
+      width: 48px;
+      height: 10px;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+
+    .legend-row p {
+      margin: 0;
+      font-size: 14.5px;
+      color: #8fa48f;
+    }
+    .legend-row strong {
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    /* ── FAQ ── */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 8px;
+    }
+
+    details {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    details[open] {
+      border-color: var(--green-dim);
+    }
+    details[open] summary {
+      color: var(--green);
+    }
+
+    summary {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+      padding: 18px 20px;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      transition: color .2s;
+    }
+    summary::-webkit-details-marker { display: none; }
+
+    summary::after {
+      content: '+';
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 20px;
+      color: var(--muted);
+      flex-shrink: 0;
+      transition: transform .25s;
+    }
+    details[open] summary::after {
+      transform: rotate(45deg);
+      color: var(--green);
+    }
+
+    .faq-body {
+      padding: 0 20px 18px;
+      font-size: 14.5px;
+      color: #8fa48f;
+      line-height: 1.7;
+    }
+
+    /* ── Contact card ── */
+    .contact-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .contact-card p {
+      margin: 0;
+    }
+
+    .email-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--green);
+      color: #000;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: 8px;
+      transition: background .2s, transform .2s;
+      align-self: flex-start;
+    }
+    .email-btn:hover {
+      background: #52f06e;
+      transform: translateY(-2px);
+    }
+    .email-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 72px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    footer p {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    footer a:hover { color: var(--green); }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header  { animation: fadeUp .6s ease both; }
+    nav     { animation: fadeUp .6s .1s ease both; }
+    section { animation: fadeUp .5s .2s ease both; }
+
+    .step-card:nth-child(1) { animation-delay: .05s; }
+    .step-card:nth-child(2) { animation-delay: .1s; }
+    .step-card:nth-child(3) { animation-delay: .15s; }
+    .step-card:nth-child(4) { animation-delay: .2s; }
+    .step-card:nth-child(5) { animation-delay: .25s; }
+    .step-card:nth-child(6) { animation-delay: .3s; }
+
+    /* ── Responsive ── */
+    @media (max-width: 520px) {
+      .contact-card { padding: 24px 20px; }
+      header { padding: 40px 0 36px; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <header>
+    <span class="brand-super">Super</span>
+    <h1 class="brand-name">Decoder</h1>
+    <span class="brand-tag">// support &amp; help center</span>
+    <div class="dots">
+      <div class="dot" style="background:#f23333"></div>
+      <div class="dot" style="background:#33d94b"></div>
+      <div class="dot" style="background:#ff8c1a"></div>
+      <div class="dot" style="background:#a633f2"></div>
+      <div class="dot" style="background:#ffe01a"></div>
+      <div class="dot" style="background:#2680ff"></div>
+      <div class="dot" style="background:#ff59b2"></div>
+    </div>
+  </header>
+
+  <!-- Nav -->
+  <nav>
+    <a href="#how-to-play">How to Play</a>
+    <a href="#feedback">Feedback System</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <!-- How to Play -->
+  <section id="how-to-play">
+    <p class="section-label">// getting started</p>
+    <h2>How to Play</h2>
+    <p>Super Decoder is a logic-based color code-breaking game. A secret 4-color code is hidden at the start of each round — your goal is to crack it within 7 attempts using deduction and the feedback from each guess.</p>
+
+    <div class="steps">
+      <div class="step-card" data-n="1">
+        <h3>Start a Game</h3>
+        <p>Tap <strong>NEW</strong> to begin. A secret 4-color code is randomly generated from 7 possible colors.</p>
+      </div>
+      <div class="step-card" data-n="2">
+        <h3>Fill Your Row</h3>
+        <p>Tap each empty cell in the active row to pick a color. You must fill all 4 cells before submitting.</p>
+      </div>
+      <div class="step-card" data-n="3">
+        <h3>Submit Your Guess</h3>
+        <p>Once all 4 cells are filled, tap <strong>SUBMIT</strong>. Your guess is instantly analyzed.</p>
+      </div>
+      <div class="step-card" data-n="4">
+        <h3>Read the Feedback</h3>
+        <p>Colored bars appear below each cell — use them to refine your next guess logically.</p>
+      </div>
+      <div class="step-card" data-n="5">
+        <h3>Win or Lose</h3>
+        <p>Get all 4 green bars to win. Run out of rows (7 attempts) without cracking the code and it's game over.</p>
+      </div>
+      <div class="step-card" data-n="6">
+        <h3>Play Again</h3>
+        <p>Tap <strong>PLAY AGAIN</strong> on the result screen or hit <strong>NEW</strong> at any time to start fresh.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feedback System -->
+  <section id="feedback">
+    <p class="section-label">// reading the clues</p>
+    <h2>Feedback System</h2>
+    <p>After each submitted row, a small indicator bar appears beneath every cell. These bars are your only clues — learn to read them quickly.</p>
+
+    <div class="legend">
+      <div class="legend-row">
+        <div class="legend-bar" style="background:#33d94b; box-shadow: 0 0 8px #33d94b88;"></div>
+        <p><strong>Green bar</strong> — Correct color, correct position. This cell is locked in.</p>
+      </div>
+      <div class="legend-row">
+        <div class="legend-bar" style="background:#eaeaea;"></div>
+        <p><strong>White bar</strong> — Right color, but wrong position. It belongs somewhere else in the code.</p>
+      </div>
+      <div class="legend-row">
+        <div class="legend-bar" style="background:#252525; border: 1px solid #333;"></div>
+        <p><strong>No bar / dark</strong> — This color does not appear anywhere in the secret code.</p>
+      </div>
+    </div>
+
+    <p style="margin-top: 20px; font-size: 14px;">
+      <strong style="color:var(--yellow)">Tip:</strong> Feedback is given per position — a white bar on cell 2 doesn't tell you <em>which</em> position the color belongs in, only that it's somewhere else. Use process of elimination across rows to narrow it down.
+    </p>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <p class="section-label">// common questions</p>
+    <h2>FAQ</h2>
+
+    <div class="faq-list">
+
+      <details>
+        <summary>Can the same color appear twice in the code?</summary>
+        <div class="faq-body">
+          No. The secret code always uses 4 <strong>unique</strong> colors chosen from the 7 available. You'll never see the same color repeated in a single code.
+        </div>
+      </details>
+
+      <details>
+        <summary>How many colors are in the game?</summary>
+        <div class="faq-body">
+          There are 7 colors total: <strong>Red, Green, Orange, Purple, Yellow, Blue,</strong> and <strong>Pink</strong>. The secret code uses 4 of these 7 each game, chosen at random.
+        </div>
+      </details>
+
+      <details>
+        <summary>How many attempts do I get?</summary>
+        <div class="faq-body">
+          You have <strong>7 attempts</strong> per game. The attempt counter at the bottom of the screen tracks how many guesses you've used. If you reach row 7 without cracking the code, the game ends and the secret code is revealed.
+        </div>
+      </details>
+
+      <details>
+        <summary>What does the counter at the bottom show?</summary>
+        <div class="faq-body">
+          The digital display shows your current attempt number out of 7 — e.g. <strong>002 / 7 attempts</strong> means you've submitted 2 guesses. The colored dots beside it show all 7 available colors for reference.
+        </div>
+      </details>
+
+      <details>
+        <summary>Can I change a color after placing it?</summary>
+        <div class="faq-body">
+          Yes — as long as you haven't submitted the row yet, simply tap any cell in the active row again to change its color. Once you hit SUBMIT, that row is locked.
+        </div>
+      </details>
+
+      <details>
+        <summary>How do I start a new game mid-round?</summary>
+        <div class="faq-body">
+          Tap the <strong>NEW</strong> button in the top-right corner at any time. This immediately resets the board and generates a fresh secret code.
+        </div>
+      </details>
+
+      <details>
+        <summary>Is there a timer or time limit?</summary>
+        <div class="faq-body">
+          No. Super Decoder is completely untimed — take as long as you need to think through your strategy.
+        </div>
+      </details>
+
+      <details>
+        <summary>The app isn't behaving as expected. What should I do?</summary>
+        <div class="faq-body">
+          Try closing and reopening the app first. If the issue persists, make sure you're running the latest version from the App Store. If it still occurs, please contact us at <a href="mailto:ian.jyz@gmail.com" style="color:var(--green);">ian.jyz@gmail.com</a> with a description of what happened.
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <p class="section-label">// get in touch</p>
+    <h2>Contact &amp; Feedback</h2>
+
+    <div class="contact-card">
+      <p>Have a bug to report, a feature suggestion, or just want to say hello? We'd love to hear from you. Reach out directly by email — we read every message.</p>
+      <p style="font-size:14px;">Response time is typically within <strong style="color:var(--white)">1–2 business days</strong>.</p>
+      <a class="email-btn" href="mailto:ian.jyz@gmail.com?subject=Super Decoder Support">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+        </svg>
+        ian.jyz@gmail.com
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Super Decoder. All rights reserved.</p>
+    <p><a href="mailto:ian.jyz@gmail.com">ian.jyz@gmail.com</a></p>
+  </footer>
+
+</div>
+</body>
+</html>
