@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Super Wordle — Support</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #0d160d;
+      --bg2:          #111e11;
+      --card:         #161f16;
+      --border:       #2a3e2a;
+      --green:        #32c850;
+      --green-dim:    #1c6c28;
+      --green-cell:   #1c6c2a;
+      --grey-cell:    #373737;
+      --text:         #e8e8e8;
+      --muted:        #6b8c6b;
+      --yellow:       #ffd914;
+      --mono:         'IBM Plex Mono', monospace;
+      --sans:         'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Grid texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 44px 44px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Header ────────────────────────────────────────────── */
+    header {
+      position: relative;
+      z-index: 1;
+      background: rgba(10, 16, 10, 0.92);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      padding: 20px 5vw;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo-cells {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .logo-row {
+      display: flex;
+      gap: 4px;
+    }
+
+    .logo-cell {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      border: 1.5px solid var(--green);
+      background: var(--green-cell);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .logo-cell.grey {
+      background: var(--grey-cell);
+      border-color: #555;
+      color: #aaa;
+    }
+
+    .logo-cell.empty {
+      background: transparent;
+      border-color: var(--border);
+      color: transparent;
+    }
+
+    .header-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-title .super {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--green);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .header-title .wordle {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 2px;
+      line-height: 1.1;
+    }
+
+    .header-badge {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    /* ── Main ───────────────────────────────────────────────── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 60px 5vw 100px;
+    }
+
+    /* ── Hero ───────────────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      margin-bottom: 64px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-family: var(--mono);
+      font-size: clamp(32px, 7vw, 52px);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span { color: var(--green); }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── How to play ────────────────────────────────────────── */
+    .how-to-play {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      margin-bottom: 40px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    .rules-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .rule-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .rule-cell {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .rule-cell.green  { background: var(--green-cell); border: 2px solid var(--green); color: #fff; }
+    .rule-cell.grey   { background: var(--grey-cell);  border: 2px solid #666;         color: #ddd; }
+    .rule-cell.dark   { background: #1a1a1a;            border: 2px solid #333;         color: #555; }
+
+    .rule-text strong { color: var(--text); display: block; margin-bottom: 2px; font-size: 14px; }
+    .rule-text span   { color: var(--muted); font-size: 13px; }
+
+    /* ── Example word row ───────────────────────────────────── */
+    .word-example {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin: 32px 0 8px;
+    }
+
+    .ex-cell {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .ex-caption {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: var(--mono);
+      letter-spacing: 1px;
+      margin-bottom: 28px;
+    }
+
+    /* ── FAQ ────────────────────────────────────────────────── */
+    .faq-section {
+      margin-bottom: 40px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .faq-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .faq-item:hover { border-color: var(--green-dim); }
+
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 500;
+      text-align: left;
+      padding: 20px 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .faq-q::after {
+      content: '+';
+      font-family: var(--mono);
+      font-size: 20px;
+      color: var(--green);
+      flex-shrink: 0;
+      transition: transform 0.25s;
+    }
+
+    .faq-item.open .faq-q::after { transform: rotate(45deg); }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.25s;
+      padding: 0 24px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .faq-item.open .faq-a {
+      max-height: 300px;
+      padding: 0 24px 20px;
+    }
+
+    /* ── Contact ────────────────────────────────────────────── */
+    .contact-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      text-align: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(50,200,80,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .contact-card .section-label { margin-bottom: 12px; }
+
+    .contact-card p {
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 380px;
+      margin: 0 auto 28px;
+    }
+
+    .email-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--green-cell);
+      border: 2px solid var(--green);
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+    }
+
+    .email-link:hover {
+      background: var(--green);
+      color: #000;
+      transform: translateY(-2px);
+    }
+
+    .email-link svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 28px 0;
+      color: var(--border);
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .divider span {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .response-note {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-top: 20px;
+    }
+
+    .response-note strong { color: var(--green); }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 28px 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-brand {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .footer-brand strong { color: var(--green); }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--green); }
+
+    /* ── Animations ─────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 540px) {
+      .how-to-play, .contact-card { padding: 24px 20px; }
+      .word-example .ex-cell { width: 40px; height: 40px; font-size: 15px; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-cells">
+      <div class="logo-row">
+        <div class="logo-cell">S</div>
+        <div class="logo-cell">U</div>
+        <div class="logo-cell">P</div>
+        <div class="logo-cell">E</div>
+        <div class="logo-cell">R</div>
+      </div>
+      <div class="logo-row">
+        <div class="logo-cell">W</div>
+        <div class="logo-cell">O</div>
+        <div class="logo-cell">R</div>
+        <div class="logo-cell grey">T</div>
+        <div class="logo-cell grey">H</div>
+      </div>
+      <div class="logo-row">
+        <div class="logo-cell grey">F</div>
+        <div class="logo-cell grey">A</div>
+        <div class="logo-cell">D</div>
+        <div class="logo-cell">L</div>
+        <div class="logo-cell">E</div>
+      </div>
+    </div>
+    <div class="header-title">
+      <span class="super">Super</span>
+      <span class="wordle">Wordle</span>
+    </div>
+    <span class="header-badge">Support</span>
+  </header>
+
+  <!-- Main -->
+  <main>
+
+    <!-- Hero -->
+    <section class="hero">
+      <p class="hero-eyebrow">Help &amp; Support</p>
+      <h1>We're here to<br><span>help you crack it.</span></h1>
+      <p>Everything you need to know about Super Wordle — how to play, common questions, and how to reach us.</p>
+    </section>
+
+    <!-- How to play -->
+    <section class="how-to-play">
+      <p class="section-label">Getting Started</p>
+      <h2 class="section-title">How to Play</h2>
+
+      <div class="word-example">
+        <div class="ex-cell rule-cell green">A</div>
+        <div class="ex-cell rule-cell grey">P</div>
+        <div class="ex-cell rule-cell grey">P</div>
+        <div class="ex-cell rule-cell dark">L</div>
+        <div class="ex-cell rule-cell green">E</div>
+      </div>
+      <p class="ex-caption">Example guess for a 5-letter word</p>
+
+      <ul class="rules-list">
+        <li class="rule-item">
+          <div class="rule-cell green">A</div>
+          <div class="rule-text">
+            <strong>Green — Correct position</strong>
+            <span>The letter is in the word and in exactly the right spot.</span>
+          </div>
+        </li>
+        <li class="rule-item">
+          <div class="rule-cell grey">P</div>
+          <div class="rule-text">
+            <strong>Grey — Wrong position</strong>
+            <span>The letter is in the word, but it belongs somewhere else.</span>
+          </div>
+        </li>
+        <li class="rule-item">
+          <div class="rule-cell dark">L</div>
+          <div class="rule-text">
+            <strong>No highlight — Not in word</strong>
+            <span>This letter does not appear in the target word at all.</span>
+          </div>
+        </li>
+      </ul>
+
+      <div style="margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px;">
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <span style="font-family:var(--mono); font-size:12px; color:var(--green); min-width:24px;">01</span>
+          <span style="font-size:14px; color:var(--muted);">Use the on-screen keyboard to type any valid 5-letter word.</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <span style="font-family:var(--mono); font-size:12px; color:var(--green); min-width:24px;">02</span>
+          <span style="font-size:14px; color:var(--muted);">Press <strong style="color:var(--text); font-family:var(--mono);">ENTER</strong> to submit your guess — only real words are accepted.</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <span style="font-family:var(--mono); font-size:12px; color:var(--green); min-width:24px;">03</span>
+          <span style="font-size:14px; color:var(--muted);">Use the colour feedback to narrow down the hidden word.</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <span style="font-family:var(--mono); font-size:12px; color:var(--green); min-width:24px;">04</span>
+          <span style="font-size:14px; color:var(--muted);">Solve it within <strong style="color:var(--text);">7 attempts</strong> to crack the code. Tap <strong style="color:var(--text); font-family:var(--mono);">NEW</strong> anytime to start a fresh game.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+      <p class="section-label" style="margin-bottom:20px;">FAQ</p>
+      <h2 class="section-title" style="margin-bottom:20px;">Common Questions</h2>
+
+      <div class="faq-item">
+        <button class="faq-q">Why won't my word submit?</button>
+        <div class="faq-a">Super Wordle only accepts valid English words from its built-in dictionary. If your word isn't submitting, it may not be in our word list. Try a different word — the game will shake to indicate an invalid entry.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Can I play more than one game?</button>
+        <div class="faq-a">Yes! Unlike some word games, Super Wordle is unlimited. Simply tap the <strong>NEW</strong> button in the top right at any time to start a fresh puzzle with a new randomly selected word.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">How many words are in the game?</button>
+        <div class="faq-a">Super Wordle includes hundreds of carefully chosen 5-letter English words. Words are selected randomly each game, so you'll rarely see repeats in normal play.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">What does the keyboard colour mean?</button>
+        <div class="faq-a">The on-screen keyboard tracks your progress across all guesses. Keys turn green when you've found a correct position, grey when a letter is in the word but misplaced, and dark when a letter has been ruled out entirely.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">The app crashed or isn't working — what should I do?</button>
+        <div class="faq-a">First, try force-closing and reopening the app. If the issue persists, try deleting and reinstalling Super Wordle from the App Store. If you're still experiencing problems, please contact us — we'd love to help fix it.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Will my progress be saved?</button>
+        <div class="faq-a">Each game of Super Wordle is self-contained and does not save progress between sessions. Starting a new game or closing the app will begin fresh next time.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">How do I suggest a word or report an issue?</button>
+        <div class="faq-a">We'd love to hear from you! Use the contact email below to suggest words, report bugs, or share any other feedback. We read every message.</div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact-card">
+      <p class="section-label">Get in Touch</p>
+      <h2 class="section-title" style="margin-bottom: 12px;">Still need help?</h2>
+      <p>Have a bug to report, a word to suggest, or just want to say hello? Drop us an email — we read every message and aim to reply promptly.</p>
+
+      <a class="email-link" href="mailto:ian.jyz@gmail.com?subject=Super Wordle Support">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
+        </svg>
+        ian.jyz@gmail.com
+      </a>
+
+      <div class="divider"><span>or</span></div>
+
+      <a class="email-link" href="mailto:ian.jyz@gmail.com?subject=Super Wordle Feedback" style="background: transparent; border-color: var(--border); color: var(--muted);">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11.5 2C6.81 2 3 5.81 3 10.5S6.81 19 11.5 19h.5v3c4.86-2.34 8-7 8-11.5C20 5.81 16.19 2 11.5 2zm1 14.5h-2v-2h2v2zm0-4h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2h-2c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5z"/>
+        </svg>
+        Send Feedback
+      </a>
+
+      <p class="response-note">Typical response time: <strong>within 48 hours</strong></p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-brand">
+      <strong>Super Wordle</strong> &nbsp;·&nbsp; © 2026 All rights reserved
+    </div>
+    <div class="footer-links">
+      <a href="mailto:ian.jyz@gmail.com">Contact</a>
+      <a href="mailto:ian.jyz@gmail.com?subject=Super Wordle Privacy">Privacy</a>
+    </div>
+  </footer>
+
+  <script>
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+  </script>
+
+</body>
+</html>
