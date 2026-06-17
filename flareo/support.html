@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Food Recall AU — Support</title>
+<style>
+  :root {
+    --screen: #FAF8F4;
+    --surface: #FFFFFF;
+    --accent: #1E5B4E;
+    --text: #1C1A17;
+    --text-secondary: #3A3733;
+    --muted: #7A756E;
+    --faint: #9A948C;
+    --hairline: rgba(0,0,0,0.08);
+    --urgent: #D23B2E;
+    --allergen: #B97400;
+    --advisory: #3D6FA8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --screen: #1A1714;
+      --surface: #26221C;
+      --accent: #57B49B;
+      --text: #F3F0EA;
+      --text-secondary: #D7D2C9;
+      --muted: #938C82;
+      --faint: #7C766C;
+      --hairline: rgba(255,255,255,0.10);
+      --urgent: #FF6B5C;
+      --allergen: #F2B53D;
+      --advisory: #86B4E8;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--screen);
+    color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 32px 20px 64px; }
+
+  header { margin-bottom: 8px; }
+  h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 2px; }
+  .tagline { color: var(--muted); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+  nav { margin: 22px 0 8px; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  nav a { color: var(--accent); text-decoration: none; font-weight: 600; font-size: 14.5px; }
+  nav a:hover { text-decoration: underline; }
+
+  section { margin-top: 40px; }
+  h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; margin: 0 0 14px; }
+  h3 { font-size: 16px; font-weight: 700; margin: 22px 0 4px; }
+  p { margin: 0 0 14px; color: var(--text-secondary); }
+  a { color: var(--accent); }
+  ul { margin: 0 0 14px; padding-left: 20px; color: var(--text-secondary); }
+  li { margin: 4px 0; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    padding: 20px 22px;
+  }
+  .faq h3 { color: var(--text); }
+  .faq p:last-child { margin-bottom: 0; }
+  .faq .qa + .qa { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--hairline); }
+
+  .tiers { display: flex; flex-direction: column; gap: 10px; margin: 6px 0 2px; }
+  .tier { display: flex; align-items: baseline; gap: 10px; }
+  .dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; position: relative; top: 2px; }
+  .tier b { font-weight: 700; }
+  .tier span { color: var(--muted); font-size: 14.5px; }
+
+  footer { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--hairline); color: var(--faint); font-size: 13px; }
+  footer a { color: var(--muted); }
+  .legal { font-size: 12.5px; line-height: 1.55; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Food Recall AU</h1>
+    <div class="tagline">Support &amp; Help Center</div>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#using">Using the app</a>
+      <a href="#severity">Severity labels</a>
+      <a href="#faq">FAQ</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#data">Data &amp; legal</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section id="about">
+    <h2>About</h2>
+    <p>Food Recall AU is an unofficial app that surfaces Australian food recalls sourced from the
+    Food Standards Australia New Zealand (FSANZ) recall feed. It is built for everyday consumers,
+    parents and people with allergies to quickly see what has been recalled, why, where, and what to do.</p>
+    <p><strong>It is not an official FSANZ app.</strong> Always confirm details on the official recall
+    notice before acting.</p>
+  </section>
+
+  <section id="using">
+    <h2>Using the app</h2>
+    <h3>Browse recalls</h3>
+    <p>The home screen lists current recalls newest-first. Each card shows the severity, product,
+    brand, the hazard, the affected states, and the date.</p>
+    <h3>Filter &amp; search</h3>
+    <p>Use <em>Filter</em> to narrow by severity, state, and allergen. Tap the search button to look
+    up a product, brand, or hazard, or browse by hazard category.</p>
+    <h3>Open a recall</h3>
+    <p>Tap any recall to see the full details — the hazard, where it was sold, batch/date marking,
+    why it was recalled, what you should do, and a link to the official FSANZ recall notice.</p>
+    <h3>Widgets</h3>
+    <p>Add the Home Screen or Lock Screen widget to see the latest recall at a glance. Widgets refresh
+    automatically and update when you open the app.</p>
+  </section>
+
+  <section id="severity">
+    <h2>Severity labels</h2>
+    <p>FSANZ does not publish a severity rating, so the app assigns one from the hazard text to help
+    you triage at a glance. These labels are produced by this app, not by FSANZ:</p>
+    <div class="tiers">
+      <div class="tier"><span class="dot" style="background:var(--urgent)"></span><b>Urgent</b> <span>— microbial or contamination hazards (e.g. Listeria, Salmonella, E.&nbsp;coli, foreign matter).</span></div>
+      <div class="tier"><span class="dot" style="background:var(--allergen)"></span><b>Allergen</b> <span>— an undeclared allergen on the label.</span></div>
+      <div class="tier"><span class="dot" style="background:var(--advisory)"></span><b>Advisory</b> <span>— lower-risk, consumer-level recalls.</span></div>
+    </div>
+    <p style="margin-top:14px">Because the label is inferred from wording in the recall notice, always
+    read the official notice for the authoritative hazard description.</p>
+  </section>
+
+  <section id="faq">
+    <h2>Frequently asked questions</h2>
+    <div class="card faq">
+      <div class="qa">
+        <h3>Where does the recall data come from?</h3>
+        <p>Directly from the official FSANZ food-recalls RSS feed. The app fetches it automatically;
+        there is no manual data entry.</p>
+      </div>
+      <div class="qa">
+        <h3>Who decides the Urgent / Allergen / Advisory labels?</h3>
+        <p>The app does, by matching keywords in the hazard text — not FSANZ. Use them as a quick guide
+        only and rely on the official notice for the definitive hazard.</p>
+      </div>
+      <div class="qa">
+        <h3>Is this the official FSANZ app?</h3>
+        <p>No. Food Recall AU is an independent, unofficial app. FSANZ does not endorse it.</p>
+      </div>
+      <div class="qa">
+        <h3>A recall is missing or looks out of date.</h3>
+        <p>The app shows what is currently in the FSANZ feed, which can lag or change. Pull to refresh,
+        and check the <a href="https://www.foodstandards.gov.au/food-recalls/recalls" target="_blank" rel="noopener">official recalls page</a>
+        for the most current information.</p>
+      </div>
+      <div class="qa">
+        <h3>My widget isn't updating.</h3>
+        <p>Open the app once so it can refresh, and ensure the device has a network connection. Widgets
+        update on the system schedule and whenever the app fetches new data; removing and re-adding the
+        widget also forces a refresh.</p>
+      </div>
+      <div class="qa">
+        <h3>Does the app collect my data?</h3>
+        <p>No. There is no account, no sign-in, and no analytics or tracking. See Privacy below.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy">
+    <h2>Privacy</h2>
+    <p>Food Recall AU does not collect, store, or share personal information. There are no accounts and
+    no third-party analytics or advertising. The app only makes a network request to download the public
+    FSANZ recall feed and product images. Your filter and search choices stay on your device.</p>
+  </section>
+
+  <section id="data">
+    <h2>Data &amp; legal</h2>
+    <p class="legal">Recall data is sourced from the Food Standards Australia New Zealand (FSANZ) recall
+    feed and has been reformatted for this app — including severity labels, which are assigned by this
+    app, not by FSANZ. Contains material &copy; Food Standards Australia New Zealand, used under
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC&nbsp;BY&nbsp;4.0</a>,
+    with changes. FSANZ does not endorse this app. This is an unofficial app and may be incomplete or out
+    of date — always check the official site for the most current recalls.</p>
+    <ul>
+      <li>Official recalls: <a href="https://www.foodstandards.gov.au/food-recalls/recalls" target="_blank" rel="noopener">foodstandards.gov.au/food-recalls/recalls</a></li>
+      <li>Licence: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></li>
+      <li>Health advice: healthdirect 1800 022 222</li>
+    </ul>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>Questions, bug reports, or feedback? Email
+    <a href="mailto:ian.jyz@gmail.com?subject=Food%20Recall%20AU%20Support">ian.jyz@gmail.com</a>.
+    I aim to reply within a few business days.</p>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Food Recall AU. Unofficial app — not affiliated with or endorsed by FSANZ.<br>
+    Support: <a href="mailto:ian.jyz@gmail.com">ian.jyz@gmail.com</a> · Last updated 17 June 2026</p>
+  </footer>
+
+</div>
+</body>
+</html>
